@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Icon, Input } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import { size } from "lodash";
+import { isEmpty, size } from "lodash";
 
-import Loading from "../Loading";
 import { validateEmail } from "../../utils/helpers";
+import { loginWhithEmailAndPassword } from "../../utils/actions";
+import Loading from "../Loading";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,13 +21,21 @@ export default function LoginForm() {
     setFormData({ ...formData, [type]: e.nativeEvent.text });
   };
 
-  const doLogin = () => {
+  const doLogin = async () => {
     if (!validateData()) {
       return;
     }
     setLoading(true);
-    console.log("object");
+    const result = await loginWhithEmailAndPassword(
+      formData.email,
+      formData.password
+    );
     setLoading(false);
+    if (!result.statusResponse) {
+      setErrorEmail(result.error);
+      return;
+    }
+    navigation.navigate("account");
   };
 
   const validateData = () => {
@@ -39,10 +48,8 @@ export default function LoginForm() {
       isValid = false;
     }
 
-    if (size(formData.password) < 6) {
-      setErrorPassword(
-        "Debes ingresar una contraseña de al menos 6 carácteres"
-      );
+    if (isEmpty(formData.password)) {
+      setErrorPassword("Debes ingrear una contraseña");
       isValid = false;
     }
 

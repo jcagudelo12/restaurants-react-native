@@ -35,7 +35,6 @@ export default function RegisterForm() {
       return;
     }
     navigation.navigate("restaurants");
-    console.log("llegue");
   };
 
   const validateData = () => {

@@ -1,19 +1,17 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Icon, Input } from "react-native-elements";
-import { size } from "lodash";
 import { useNavigation } from "@react-navigation/native";
+import { size } from "lodash";
 
-import { registerUser } from "../../utils/actions";
-import { validateEmail } from "../../utils/helpers";
 import Loading from "../Loading";
+import { validateEmail } from "../../utils/helpers";
 
-export default function RegisterForm() {
+export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(defaultFormValues());
   const [errorEmail, setErrorEmail] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
-  const [errorConfirm, setErrorConfirm] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation();
@@ -22,24 +20,16 @@ export default function RegisterForm() {
     setFormData({ ...formData, [type]: e.nativeEvent.text });
   };
 
-  const doRegisterUser = async () => {
+  const doLogin = () => {
     if (!validateData()) {
       return;
     }
-
     setLoading(true);
-    const result = await registerUser(formData.email, formData.password);
+    console.log("object");
     setLoading(false);
-    if (!result.statusResponse) {
-      setErrorEmail(result.error);
-      return;
-    }
-    navigation.navigate("restaurants");
-    console.log("llegue");
   };
 
   const validateData = () => {
-    setErrorConfirm("");
     setErrorEmail("");
     setErrorPassword("");
     let isValid = true;
@@ -56,24 +46,11 @@ export default function RegisterForm() {
       isValid = false;
     }
 
-    if (size(formData.confirm) < 6) {
-      setErrorConfirm(
-        "Debes ingresar una confirmación de contraseña de al menos 6 carácteres"
-      );
-      isValid = false;
-    }
-
-    if (formData.password !== formData.confirm) {
-      setErrorConfirm("Las contraseñas no coinciden.");
-      setErrorPassword("Las contraseñas no coinciden.");
-      isValid = false;
-    }
-
     return isValid;
   };
 
   return (
-    <View style={styles.form}>
+    <View style={styles.container}>
       <Input
         containerStyle={styles.input}
         placeholder="Ingresa tu email"
@@ -99,40 +76,26 @@ export default function RegisterForm() {
           />
         }
       />
-      <Input
-        containerStyle={styles.input}
-        placeholder="Confirma tu contraseña"
-        password={true}
-        secureTextEntry={!showPassword}
-        onChange={(e) => onChange(e, "confirm")}
-        errorMessage={errorConfirm}
-        defaultValue={formData.confirm}
-        rightIcon={
-          <Icon
-            type="material-community"
-            name={showPassword ? "eye-off-outline" : "eye-outline"}
-            iconStyle={styles.icon}
-            onPress={() => setShowPassword(!showPassword)}
-          />
-        }
-      />
       <Button
-        title="Registrar Nuevo Usuario"
+        title="Iniciar sesión"
         containerStyle={styles.btnContainer}
         buttonStyle={styles.btn}
-        onPress={() => doRegisterUser()}
+        onPress={() => doLogin()}
       />
-      <Loading isVisible={loading} text="Creando cuenta" />
+      <Loading isVisible={loading} text="Iniciando sesión..." />
     </View>
   );
 }
 
 const defaultFormValues = () => {
-  return { email: "", password: "", confirm: "" };
+  return { email: "", password: "" };
 };
 
 const styles = StyleSheet.create({
-  form: {
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 30,
   },
   input: {

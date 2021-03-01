@@ -1,5 +1,5 @@
 import { firebaseApp } from "./firebase";
-import * as firebase from "firebase";
+import firebase from "firebase";
 import "firebase/firestore";
 
 const db = firebase.firestore(firebaseApp);
@@ -13,7 +13,7 @@ export const isUserLogged = () => {
 };
 
 export const getCurrentUser = () => {
-  return firebase.auth().getCurrentUser;
+  return firebase.auth().currentUser;
 };
 
 export const registerUser = async (email, password) => {

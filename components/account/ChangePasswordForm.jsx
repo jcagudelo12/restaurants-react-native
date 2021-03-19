@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, Icon, Input } from "react-native-elements";
 import { isEmpty, size } from "lodash";
-import { reauthenicate, updateEmail } from "../../utils/actions";
-import { validateEmail } from "../../utils/helpers";
+import { reauthenicate, updatePassword } from "../../utils/actions";
 
 export default function ChangePasswordForm({ email, setShowModal, toastRef }) {
   const [newPassword, setNewPassword] = useState(null);
@@ -19,27 +18,27 @@ export default function ChangePasswordForm({ email, setShowModal, toastRef }) {
     if (!validateForm()) {
       return;
     }
-    // setLoading(true);
-    // const resultReauthenicate = await reauthenicate(password);
-    // if (!resultReauthenicate.statusResponse) {
-    //   setLoading(false);
-    //   setErrorPassword("Contraseña incorrecta.");
-    //   return;
-    // }
+    setLoading(true);
+    const resultReauthenicate = await reauthenicate(currentPassword);
+    if (!resultReauthenicate.statusResponse) {
+      setLoading(false);
+      setErrorCurrentPassword("Contraseña incorrecta.");
+      return;
+    }
 
-    // const resultUpdateEmail = await updateEmail(newEmail);
-    // setLoading(false);
+    const resultUpdatePassword = await updatePassword(newPassword);
+    setLoading(false);
 
-    // if (!resultUpdateEmail.statusResponse) {
-    //   setLoading(false);
-    //   setErrorEmail(
-    //     "No se puede cambiar por este correo, ya está en uso por otro usuario."
-    //   );
-    //   return;
-    // }
-    // setReloadUser(true);
-    // toastRef.current.show("Se ha actualizado el email", 3000);
-    // setShowModal(false);
+    if (!resultUpdatePassword.statusResponse) {
+      setLoading(false);
+      setErrorNewPassword(
+        "Hubo un problema cambiando la contraseña, por favor intente más tarde."
+      );
+      return;
+    }
+    setReloadUser(true);
+    toastRef.current.show("Se ha actualizado el emailla contraseña.", 3000);
+    setShowModal(false);
   };
 
   const validateForm = () => {

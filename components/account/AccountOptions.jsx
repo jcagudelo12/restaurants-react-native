@@ -49,6 +49,7 @@ export default function AccountOptions({ user, toastRef }) {
         setRenderComponent(<Text>password</Text>);
         break;
     }
+    setShowModal(true);
   };
   const menuOptions = generateOptions();
 

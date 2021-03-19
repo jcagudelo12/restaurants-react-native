@@ -3,9 +3,10 @@ import { StyleSheet, View, Text } from "react-native";
 import { map } from "lodash";
 import { Icon, ListItem } from "react-native-elements";
 import Modal from "../Modal";
+import ChangeDisplayNameForm from "./ChangeDisplayNameForm";
 
-export default function AccountOptions({ user, toastRef }) {
-  const [showModal, setShowModal] = useState(true);
+export default function AccountOptions({ user, toastRef, setReloadUser }) {
+  const [showModal, setShowModal] = useState(false);
   const [renderComponent, setRenderComponent] = useState(null);
 
   const generateOptions = () => {
@@ -40,7 +41,14 @@ export default function AccountOptions({ user, toastRef }) {
   const selectedComponent = (key) => {
     switch (key) {
       case "displayName":
-        setRenderComponent(<Text>displayName</Text>);
+        setRenderComponent(
+          <ChangeDisplayNameForm
+            displayName={user.displayName}
+            setShowModal={setShowModal}
+            toastRef={toastRef}
+            setReloadUser={setReloadUser}
+          />
+        );
         break;
       case "email":
         setRenderComponent(<Text>email</Text>);

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, Icon, Input } from "react-native-elements";
 import { isEmpty } from "lodash";
-import { updateProfile } from "../../utils/actions";
+import { reauthenicate, updateEmail } from "../../utils/actions";
 import { validateEmail } from "../../utils/helpers";
 
 export default function ChangeEmailForm({
@@ -22,20 +22,27 @@ export default function ChangeEmailForm({
     if (!validateForm()) {
       return;
     }
-    // setLoading(true);
+    setLoading(true);
+    const resultReauthenicate = await reauthenicate(password);
+    if (!resultReauthenicate.statusResponse) {
+      setLoading(false);
+      setErrorPassword("Contraseña incorrecta.");
+      return;
+    }
 
-    // const result = await updateProfile({ displayName: newDisplayName });
-    // setLoading(false);
+    const resultUpdateEmail = await updateEmail(newEmail);
+    setLoading(false);
 
-    // if (!result.statusResponse) {
-    //   setError(
-    //     "Error al actualizar nombre y apellidos, intenta de nuevo más tarde."
-    //   );
-    //   return;
-    // }
-    // setReloadUser(true);
-    // toastRef.current.show("Se han actualizado nombres y apellidos", 3000);
-    // setShowModal(false);
+    if (!resultUpdateEmail.statusResponse) {
+      setLoading(false);
+      setErrorEmail(
+        "No se puede cambiar por este correo, ya está en uso por otro usuario."
+      );
+      return;
+    }
+    setReloadUser(true);
+    toastRef.current.show("Se ha actualizado el email", 3000);
+    setShowModal(false);
   };
 
   const validateForm = () => {

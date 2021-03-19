@@ -32,7 +32,11 @@ export default function UserLogged() {
             setLoading={setLoading}
             setLoadingText={setLoadingText}
           />
-          <AccountOptions user={user} toastRef={toastRef} />
+          <AccountOptions
+            user={user}
+            toastRef={toastRef}
+            setReloadUser={setReloadUser}
+          />
         </View>
       )}
       <Button

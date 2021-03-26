@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
-import { Button, Icon, Input } from "react-native-elements";
+import { Avatar, Button, Icon, Input } from "react-native-elements";
 import CountryPicker from "react-native-country-picker-modal";
+import { map, size } from "lodash";
 
 export default function AddRestaurantForm({
   toastRef,
@@ -14,6 +15,7 @@ export default function AddRestaurantForm({
   const [errorEmail, setErrorEmail] = useState(null);
   const [errorAddress, setErrorAddress] = useState(null);
   const [errorPhone, setErrorPhone] = useState(null);
+  const [imagesSelected, setImagesSelected] = useState([]);
 
   const addRestaurant = () => {
     console.log(formData);
@@ -30,7 +32,11 @@ export default function AddRestaurantForm({
         errorAddress={errorAddress}
         errorPhone={errorPhone}
       />
-      <UploadImage />
+      <UploadImage
+        toastRef={toastRef}
+        imagesSelected={imagesSelected}
+        setImagesSelected={setImagesSelected}
+      />
       <Button
         title="Crear Restaurante"
         onPress={addRestaurant}
@@ -40,15 +46,24 @@ export default function AddRestaurantForm({
   );
 }
 
-const UploadImage = () => {
+const UploadImage = (toastRef, imagesSelected, setImagesSelected) => {
   return (
     <ScrollView horizontal style={styles.viewImage}>
-      <Icon
-        type="material-community"
-        name="camera"
-        color="#7a7a7a"
-        containerStyle={styles.containerIcon}
-      />
+      {size(imagesSelected) < 10 && (
+        <Icon
+          type="material-community"
+          name="camera"
+          color="#7a7a7a"
+          containerStyle={styles.containerIcon}
+        />
+      )}
+      {map(imagesSelected, (imageRestaurant, index) => (
+        <Avatar
+          key={index}
+          style={styles.miniatureStyle}
+          source={{ uri: imageRestaurant }}
+        />
+      ))}
     </ScrollView>
   );
 };
@@ -175,5 +190,10 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
     backgroundColor: "#e3e3e3",
+  },
+  miniatureStyle: {
+    width: 70,
+    height: 70,
+    marginRight: 10,
   },
 });

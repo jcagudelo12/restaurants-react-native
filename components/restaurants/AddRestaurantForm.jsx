@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, View, ScrollView, Alert } from "react-native";
-import { Avatar, Button, Icon, Input } from "react-native-elements";
+import { StyleSheet, View, ScrollView, Alert, Dimensions } from "react-native";
+import { Avatar, Button, Icon, Input, Image } from "react-native-elements";
 import CountryPicker from "react-native-country-picker-modal";
 import { map, size, filter } from "lodash";
 import { loadImageFromGallery } from "../../utils/helpers";
+
+const widthScreen = Dimensions.get("window").width;
 
 export default function AddRestaurantForm({
   toastRef,
@@ -23,7 +25,8 @@ export default function AddRestaurantForm({
   };
 
   return (
-    <View style={styles.viewContainer}>
+    <ScrollView style={styles.viewContainer}>
+      <ImageRestaurant imageRestaurant={imagesSelected[0]} />
       <FormAdd
         formData={formData}
         setFormData={setFormData}
@@ -43,9 +46,24 @@ export default function AddRestaurantForm({
         onPress={addRestaurant}
         buttonStyle={styles.btnAddRestaurant}
       />
-    </View>
+    </ScrollView>
   );
 }
+
+const ImageRestaurant = ({ imageRestaurant }) => {
+  return (
+    <View style={styles.viewPhoto}>
+      <Image
+        style={{ width: widthScreen, height: 200 }}
+        source={
+          imageRestaurant
+            ? { uri: imageRestaurant }
+            : require("../../assets/no-image.png")
+        }
+      />
+    </View>
+  );
+};
 
 const UploadImage = ({ toastRef, imagesSelected, setImagesSelected }) => {
   const imageSelect = async () => {
@@ -226,5 +244,10 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     marginRight: 10,
+  },
+  viewPhoto: {
+    alignItems: "center",
+    height: 200,
+    marginBottom: 20,
   },
 });

@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  Alert,
-  Dimensions,
-  Text,
-} from "react-native";
+import { StyleSheet, View, ScrollView, Alert, Dimensions } from "react-native";
 import { Avatar, Button, Icon, Input, Image } from "react-native-elements";
 import CountryPicker from "react-native-country-picker-modal";
 import { map, size, filter } from "lodash";
+import MapView from "react-native-maps";
 
 import { getCurrentLocation, loadImageFromGallery } from "../../utils/helpers";
 import Modal from "../Modal";
-import MapView from "react-native-maps";
 
 const widthScreen = Dimensions.get("window").width;
 

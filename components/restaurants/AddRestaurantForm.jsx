@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, ScrollView, Alert, Dimensions } from "react-native";
 import { Avatar, Button, Icon, Input, Image } from "react-native-elements";
 import CountryPicker from "react-native-country-picker-modal";
-import { map, size, filter } from "lodash";
+import { map, size, filter, isEmpty } from "lodash";
 import MapView from "react-native-maps";
 
-import { getCurrentLocation, loadImageFromGallery } from "../../utils/helpers";
+import {
+  getCurrentLocation,
+  loadImageFromGallery,
+  validateEmail,
+} from "../../utils/helpers";
 import Modal from "../Modal";
 
 const widthScreen = Dimensions.get("window").width;
@@ -26,7 +30,58 @@ export default function AddRestaurantForm({
   const [locationRestaurant, setLocationRestaurant] = useState(null);
 
   const addRestaurant = () => {
-    console.log(formData);
+    if (!validForm()) {
+      return;
+    }
+  };
+
+  const validForm = () => {
+    clearErrors();
+    let isValid = true;
+
+    if (isEmpty(formData.name)) {
+      setErrorName("Debes ingresar el nombre del restaurante.");
+      isValid = false;
+    }
+    if (isEmpty(formData.address)) {
+      setErrorAddress("Debes ingresar la dirección del restaurante.");
+      isValid = false;
+    }
+    if (!validateEmail(formData.email)) {
+      setErrorEmail("Debes ingresar el email del restaurante.");
+      isValid = false;
+    }
+    if (size(formData.phone) < 10) {
+      setErrorPhone("Debes ingresar un teléfono de restaurante válido.");
+      isValid = false;
+    }
+    if (isEmpty(formData.description)) {
+      setErrorDescription("Debes ingresar una descripción del restaurante.");
+      isValid = false;
+    }
+
+    if (!locationRestaurant) {
+      toastRef.current.show(
+        "Debes de localizar el restaurante en el mapa.",
+        3000
+      );
+      isValid = false;
+    } else if (size(imagesSelected) === 0) {
+      toastRef.current.show(
+        "Debes de agregar al menos una imagen al restaurante.",
+        3000
+      );
+      isValid = false;
+    }
+    return isValid;
+  };
+
+  const clearErrors = () => {
+    setErrorDescription(null);
+    setErrorEmail(null);
+    setErrorName(null);
+    setErrorPhone(null);
+    setErrorAddress(null);
   };
 
   return (
@@ -56,7 +111,6 @@ export default function AddRestaurantForm({
       <MapRestaurant
         isVisibleMap={isVisibleMap}
         setIsVisibleMap={setIsVisibleMap}
-        locationRestaurant={locationRestaurant}
         setLocationRestaurant={setLocationRestaurant}
         toastRef={toastRef}
       />
@@ -67,7 +121,6 @@ export default function AddRestaurantForm({
 const MapRestaurant = ({
   isVisibleMap,
   setIsVisibleMap,
-  locationRestaurant,
   setLocationRestaurant,
   toastRef,
 }) => {

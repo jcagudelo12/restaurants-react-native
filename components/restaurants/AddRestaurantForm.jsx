@@ -11,8 +11,12 @@ import {
   loadImageFromGallery,
   validateEmail,
 } from "../../utils/helpers";
+import {
+  addDocumentWithoutId,
+  getCurrentUser,
+  uploadImage,
+} from "../../utils/actions";
 import Modal from "../Modal";
-import { uploadImage } from "../../utils/actions";
 
 const widthScreen = Dimensions.get("window").width;
 
@@ -37,8 +41,36 @@ export default function AddRestaurantForm({
     }
 
     setLoading(true);
-    const response = await uploadImages();
+    const responseUploadImages = await uploadImages();
+    const restaurant = {
+      name: formData.name,
+      address: formData.address,
+      description: formData.description,
+      callingCode: formData.callingCode,
+      phone: formData.phone,
+      location: locationRestaurant,
+      images: responseUploadImages,
+      rating: 0,
+      ratingTotal: 0,
+      quantityVoting: 0,
+      createAt: new Date(),
+      createdBy: getCurrentUser().uid,
+    };
+    console.log(restaurant);
+    const responseAddDocument = await addDocumentWithoutId(
+      "restaurants",
+      restaurant
+    );
     setLoading(false);
+    if (!responseAddDocument.statusResponse) {
+      toastRef.current.show(
+        "Error al grabar el restaurante, por favor intenta más tarde.",
+        3000
+      );
+      return;
+    }
+
+    navigation.navigate("restaurants");
   };
 
   const uploadImages = async () => {

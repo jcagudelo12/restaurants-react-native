@@ -15,12 +15,19 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "jcagudelo12.restaurants"
     },
     "android": {
+      "package": "jcagudelo12.restaurants",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyByCvncg7Nf26NZ-GgEwkcLkQ172cb2_lI"
+        }
       },
       "permissions": [
         "CAMERA_ROLL",

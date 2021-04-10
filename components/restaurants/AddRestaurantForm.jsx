@@ -56,7 +56,6 @@ export default function AddRestaurantForm({
       createAt: new Date(),
       createdBy: getCurrentUser().uid,
     };
-    console.log(restaurant);
     const responseAddDocument = await addDocumentWithoutId(
       "restaurants",
       restaurant

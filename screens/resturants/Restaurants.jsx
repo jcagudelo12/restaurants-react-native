@@ -14,7 +14,7 @@ export default function Restaurants({ navigation }) {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const limitRestaurants = 7;
+  const limitRestaurants = 6;
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((userInfo) => {
@@ -46,7 +46,7 @@ export default function Restaurants({ navigation }) {
     );
     if (response.statusResponse) {
       setStartRestaurant(response.startRestaurant);
-      setRestaurants([...restaurents, ...response.restaurants]);
+      setRestaurants([...restaurants, ...response.restaurants]);
     }
     setLoading(false);
   };

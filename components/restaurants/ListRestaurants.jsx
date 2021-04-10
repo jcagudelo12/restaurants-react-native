@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Image } from "react-native-elements";
-import { getMoreRestaurants } from "../../utils/actions";
 import { formatPhone } from "../../utils/helpers";
 
 export default function ListRestaurants({

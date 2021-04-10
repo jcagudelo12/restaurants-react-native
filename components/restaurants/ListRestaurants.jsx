@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Image } from "react-native-elements";
+import { getMoreRestaurants } from "../../utils/actions";
 import { formatPhone } from "../../utils/helpers";
 
 export default function ListRestaurants({
@@ -44,8 +45,11 @@ const Restaurant = ({ restaurant, navigation }) => {
 
   const imageRestaurant = images[0];
 
+  const goRestaurant = () => {
+    navigation.navigate("restaurant", { id, name });
+  };
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={goRestaurant}>
       <View style={styles.viewRestaurant}>
         <View style={styles.viewRestaurantImage}>
           <Image

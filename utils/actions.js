@@ -175,13 +175,12 @@ export const getMoreRestaurants = async (limitRestaurants, startRestaurant) => {
     }
     response.forEach((doc) => {
       const restaurant = doc.data();
-      response.id = doc.id;
+      restaurant.id = doc.id;
       result.restaurants.push(restaurant);
     });
   } catch (error) {
     result.statusResponse = false;
     result.error = error;
   }
-
   return result;
 };

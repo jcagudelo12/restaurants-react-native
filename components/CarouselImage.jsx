@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
     backgroundColor: "#442484",
   },
-  dotActive: {
+  dotInactive: {
     width: 14,
     height: 14,
     borderRadius: 7,

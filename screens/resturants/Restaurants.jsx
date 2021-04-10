@@ -5,6 +5,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import firebase from "firebase/app";
 import Loading from "../../components/Loading";
 import { getRestaurants } from "../../utils/actions";
+import { size } from "lodash";
+import ListRestaurants from "../../components/restaurants/ListRestaurants";
 
 export default function Restaurants({ navigation }) {
   const [user, setUser] = useState(null);
@@ -13,7 +15,6 @@ export default function Restaurants({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const limitRestaurants = 7;
-  console.log(restaurants);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((userInfo) => {
@@ -39,7 +40,15 @@ export default function Restaurants({ navigation }) {
 
   return (
     <View style={styles.viewBody}>
-      <Text>Restaurants...</Text>
+      {size(restaurants) > 0 ? (
+        <ListRestaurants restaurants={restaurants} navigation={navigation} />
+      ) : (
+        <View style={styles.notFoundView}>
+          <Text style={styles.notFoundText}>
+            No hay restaurantes registrados.
+          </Text>
+        </View>
+      )}
       {user && (
         <Icon
           type="material-community"
@@ -66,5 +75,14 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOffset: { width: 2, height: 2 },
     shadowOpacity: 0.5,
+  },
+  notFoundView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  notFoundText: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

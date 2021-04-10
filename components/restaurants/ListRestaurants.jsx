@@ -58,7 +58,7 @@ const Restaurant = ({ restaurant, navigation }) => {
             style={styles.imageRestaurant}
           />
         </View>
-        <View>
+        <View style={styles.viewRestaurantInformation}>
           <Text style={styles.restaurantTitle}>{name}</Text>
           <Text style={styles.restaurantInformation}>{address}</Text>
           <Text style={styles.restaurantInformation}>
@@ -82,6 +82,10 @@ const styles = StyleSheet.create({
   },
   viewRestaurantImage: {
     marginRight: 15,
+  },
+  viewRestaurantInformation: {
+    width: "100%",
+    paddingRight: 4,
   },
   imageRestaurant: {
     width: 90,

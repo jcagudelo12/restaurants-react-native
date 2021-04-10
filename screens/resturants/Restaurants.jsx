@@ -4,7 +4,7 @@ import { Icon } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
 import firebase from "firebase/app";
 import Loading from "../../components/Loading";
-import { getRestaurants } from "../../utils/actions";
+import { getMoreRestaurants, getRestaurants } from "../../utils/actions";
 import { size } from "lodash";
 import ListRestaurants from "../../components/restaurants/ListRestaurants";
 
@@ -34,6 +34,23 @@ export default function Restaurants({ navigation }) {
     }, [])
   );
 
+  const handleLoadMore = async () => {
+    if (!startRestaurant) {
+      return;
+    }
+
+    setLoading(true);
+    const response = await getMoreRestaurants(
+      limitRestaurants,
+      startRestaurant
+    );
+    if (response.statusResponse) {
+      setStartRestaurant(response.startRestaurant);
+      setRestaurants([...restaurents, ...response.restaurants]);
+    }
+    setLoading(false);
+  };
+
   if (user === null) {
     return <Loading isVisible={true} text="Cargando..." />;
   }
@@ -41,7 +58,11 @@ export default function Restaurants({ navigation }) {
   return (
     <View style={styles.viewBody}>
       {size(restaurants) > 0 ? (
-        <ListRestaurants restaurants={restaurants} navigation={navigation} />
+        <ListRestaurants
+          restaurants={restaurants}
+          navigation={navigation}
+          handleLoadMore={handleLoadMore}
+        />
       ) : (
         <View style={styles.notFoundView}>
           <Text style={styles.notFoundText}>

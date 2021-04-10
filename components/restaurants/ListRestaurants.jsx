@@ -9,13 +9,20 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Image } from "react-native-elements";
+import { formatPhone } from "../../utils/helpers";
 
-export default function ListRestaurants({ restaurants, navigation }) {
+export default function ListRestaurants({
+  restaurants,
+  navigation,
+  handleLoadMore,
+}) {
   return (
     <View>
       <FlatList
         data={restaurants}
         keyExtractor={(item, index) => index.toString()}
+        onEndReachedThreshold={0.5}
+        onEndReached={handleLoadMore}
         renderItem={(restaurant) => (
           <Restaurant restaurant={restaurant} navigation={navigation} />
         )}
@@ -52,7 +59,7 @@ const Restaurant = ({ restaurant, navigation }) => {
           <Text style={styles.restaurantTitle}>{name}</Text>
           <Text style={styles.restaurantInformation}>{address}</Text>
           <Text style={styles.restaurantInformation}>
-            +{callingCode} - {phone}
+            {formatPhone(callingCode, phone)}
           </Text>
           <Text style={styles.restaurantDescription}>
             {size(description) > 0

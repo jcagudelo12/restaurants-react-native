@@ -6,6 +6,7 @@ import { Alert, Dimensions, StyleSheet, Text, ScrollView } from "react-native";
 import { ListItem, Rating, Icon } from "react-native-elements";
 import CarouselImage from "../../components/CarouselImage";
 import Loading from "../../components/Loading";
+import ListReviews from "../../components/restaurants/ListReviews";
 import MapRestaurant from "../../components/restaurants/MapRestaurant";
 import { getDocumentById } from "../../utils/actions";
 import { formatPhone } from "../../utils/helpers";
@@ -59,6 +60,7 @@ export default function Restaurant({ navigation, route }) {
         email={restaurant.email}
         phone={formatPhone(restaurant.callingCode, restaurant.phone)}
       />
+      <ListReviews navigation={navigation} idRestaurant={restaurant.id} />
     </ScrollView>
   );
 }

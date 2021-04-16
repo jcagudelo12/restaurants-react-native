@@ -46,6 +46,7 @@ export default function AddRestaurantForm({
       name: formData.name,
       address: formData.address,
       description: formData.description,
+      email: formData.email,
       callingCode: formData.callingCode,
       phone: formData.phone,
       location: locationRestaurant,

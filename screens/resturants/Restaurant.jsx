@@ -1,6 +1,6 @@
+import React, { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { map } from "lodash";
-import React, { useState, useEffect, useCallback } from "react";
 import { View } from "react-native";
 import { Alert, Dimensions, StyleSheet, Text, ScrollView } from "react-native";
 import { ListItem, Rating, Icon } from "react-native-elements";

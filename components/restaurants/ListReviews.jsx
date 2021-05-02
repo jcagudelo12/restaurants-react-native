@@ -55,7 +55,7 @@ export default function ListReviews({ navigation, idRestaurant }) {
       )}
       {size(reviews) > 0 &&
         map(reviews, (reviewDocument) => (
-          <Review reviewDocument={reviewDocument} />
+          <Review reviewDocument={reviewDocument} key={reviewDocument.id} />
         ))}
     </View>
   );

@@ -3,8 +3,10 @@ import firebase from "firebase";
 import "firebase/firestore";
 import { fileToBlob } from "./helpers";
 import { map } from "lodash";
+import { FireSQL } from "firesql";
 
 const db = firebase.firestore(firebaseApp);
+const fireSQL = new FireSQL(firebase.firestore(), { includeId: "id" });
 
 export const isUserLogged = () => {
   let islogged = false;
@@ -275,18 +277,15 @@ export const getFavorites = async () => {
       .where("idUser", "==", getCurrentUser().uid)
       .get();
 
-    const restaurantsId = [];
-
-    response.forEach((doc) => {
-      const favorite = doc.data();
-      restaurantsId.push(favorite.idRestaurant);
-    });
-
     await Promise.all(
-      map(restaurantsId, async (restaurantId) => {
-        const response2 = await getDocumentById("restaurants", restaurantId);
-        if (response2.statusResponse) {
-          result.favorites.push(response2.document);
+      map(response.docs, async (doc) => {
+        const favorite = doc.data();
+        const restaurant = await getDocumentById(
+          "restaurants",
+          favorite.idRestaurant
+        );
+        if (restaurant.statusResponse) {
+          result.favorites.push(restaurant.document);
         }
       })
     );
@@ -312,6 +311,20 @@ export const getTopRestaurants = async (limit) => {
       restaurant.id = doc.id;
       result.restaurants.push(restaurant);
     });
+  } catch (error) {
+    result.statusResponse = false;
+    result.error = error;
+  }
+
+  return result;
+};
+
+export const searchRestaurants = async (criteria) => {
+  const result = { statusResponse: true, error: null, restaurants: [] };
+  try {
+    result.restaurants = await fireSQL.query(
+      `SELECT * FROM restaurants where name LIKE '${criteria}%'`
+    );
   } catch (error) {
     result.statusResponse = false;
     result.error = error;

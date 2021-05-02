@@ -2,6 +2,7 @@ import { firebaseApp } from "./firebase";
 import firebase from "firebase";
 import "firebase/firestore";
 import { fileToBlob } from "./helpers";
+import { map } from "lodash";
 
 const db = firebase.firestore(firebaseApp);
 
@@ -247,7 +248,6 @@ export const getIsFavorite = async (idRestaurant) => {
 
 export const deleteFavorite = async (idRestaurant) => {
   const result = { statusResponse: true, error: null };
-  console.log("idRestaurant: ", idRestaurant);
   try {
     const response = await db
       .collection("favorites")
@@ -259,6 +259,38 @@ export const deleteFavorite = async (idRestaurant) => {
       const favoriteId = doc.id;
       await db.collection("favorites").doc(favoriteId).delete();
     });
+  } catch (error) {
+    result.statusResponse = false;
+    result.error = error;
+  }
+
+  return result;
+};
+
+export const getFavorites = async () => {
+  const result = { statusResponse: true, error: null, favorites: [] };
+  try {
+    const response = await db
+      .collection("favorites")
+      .where("idUser", "==", getCurrentUser().uid)
+      .get();
+
+    const restaurantsId = [];
+
+    response.forEach((doc) => {
+      const favorite = doc.data();
+      restaurantsId.push(favorite.idRestaurant);
+    });
+
+    await Promise.all(
+      map(restaurantsId, async (restaurantId) => {
+        const response2 = await getDocumentById("restaurants", restaurantId);
+        if (response2.statusResponse) {
+          result.favorites.push(response2.document);
+        }
+      })
+    );
+    //await db.collection("restaurants").doc(favoriteId).delete();
   } catch (error) {
     result.statusResponse = false;
     result.error = error;
